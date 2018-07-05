@@ -4,8 +4,8 @@ let canvasWidth = 505;
 let canvasHeight = 606;
 let rowWidth = 83;
 let colWidth = 101;
-let numRows = 5;
-let numCols = 6;
+let numRows = 6;
+let numCols = 5;
 // Game status
 let gameOver = false;
 let gameWon = false;
@@ -15,9 +15,9 @@ class Enemy {
   constructor() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-    this.colPos = 2; // 2, 3, or 4
+    this.rowPos = 2; // 2, 3, or 4
     this.x = 0;
-    this.y = canvasHeight - rowWidth*(11/4) - 83*this.colPos;
+    this.y = canvasHeight - rowWidth*(11/4) - 83*this.rowPos;
     this.speed = 50;
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
@@ -53,11 +53,11 @@ class Player {
   constructor() {
     // First figure out the correct row and column position
     // for the player
-    this.rowPos = 2;
-    this.colPos = 0;
+    this.colPos = 2;
+    this.rowPos = 0;
     // Then figure out the correct x and y positions accordingly
-    this.x = colWidth*this.rowPos;
-    this.y = canvasHeight - rowWidth*(11/4) - 83*this.colPos;
+    this.x = colWidth*this.colPos;
+    this.y = canvasHeight - rowWidth*(11/4) - 83*this.rowPos;
     // The image/sprite for the player, which uses
     // a helper function to easily load images
     this.sprite = 'images/char-boy.png';
@@ -68,19 +68,19 @@ class Player {
     // Move the player according to the key pressed without crossing
     // the boundaries of the game
     // First figure out the correct row and column position
-    if (keyPressed == 'left' && this.rowPos > 0) {
-      this.rowPos -= 1;
-    } else if (keyPressed == 'right' && this.rowPos < (numRows - 1)) {
-      this.rowPos += 1;
-    } else if (keyPressed == 'up' && this.colPos < (numCols - 1)) {
-      this.colPos += 1;
-    } else if (keyPressed == 'down' && this.colPos > 0) {
+    if (keyPressed == 'left' && this.colPos > 0) {
       this.colPos -= 1;
+    } else if (keyPressed == 'right' && this.colPos < (numCols - 1)) {
+      this.colPos += 1;
+    } else if (keyPressed == 'up' && this.rowPos < (numRows - 1)) {
+      this.rowPos += 1;
+    } else if (keyPressed == 'down' && this.rowPos > 0) {
+      this.rowPos -= 1;
     }
 
     // Check if the game has been won (i.e. if the player reached
     // the river successfully)
-    if (this.colPos == (numCols - 1)) {
+    if (this.rowPos == (numRows - 1)) {
       gameOver = true;
       gameWon = true;
       endGame(gameOver, gameWon);
@@ -92,9 +92,8 @@ class Player {
   update() {
     // Figure out the correct x and y positions according to the
     // new row and column positions
-    this.x = colWidth*this.rowPos;
-    this.y = canvasHeight - rowWidth*(11/4) - 83*this.colPos;
-
+    this.x = colWidth*this.colPos;
+    this.y = canvasHeight - rowWidth*(11/4) - 83*this.rowPos;
   };
 
   // Draw the player on the screen, required method for game
