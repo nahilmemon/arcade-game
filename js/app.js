@@ -47,24 +47,12 @@ class Player {
     // Then figure out the correct x and y positions accordingly
     this.x = colWidth*this.rowPos;
     this.y = canvasHeight - rowWidth*(11/4) - 83*this.colPos;
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+    // The image/sprite for the player, which uses
+    // a helper function to easily load images
     this.sprite = 'images/char-boy.png';
   }
 
-  // Update the enemy's position, required method for game
-  // Parameter: dt, a time delta between ticks
-  update(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-  }
-
-  // Draw the enemy on the screen, required method for game
-  render() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-  }
-
+  // Update the player's position based on the keyboard input given
   handleInput(keyPressed) {
     // Move the player according to the key pressed without crossing
     // the boundaries of the game
@@ -78,9 +66,6 @@ class Player {
     } else if (keyPressed == 'down' && this.colPos > 0) {
       this.colPos -= 1;
     }
-    // Then figure out the correct x and y positions accordingly
-    this.x = colWidth*this.rowPos;
-    this.y = canvasHeight - rowWidth*(11/4) - 83*this.colPos;
 
     // Check if the game has been won (i.e. if the player reached
     // the river successfully)
@@ -89,6 +74,21 @@ class Player {
       gameWon = true;
       endGame(gameOver, gameWon);
     }
+  }
+
+  // Update the player's position, based on the results of
+  // the handleInput(keyPressed) function
+  update() {
+    // Figure out the correct x and y positions according to the
+    // new row and column positions
+    this.x = colWidth*this.rowPos;
+    this.y = canvasHeight - rowWidth*(11/4) - 83*this.colPos;
+
+  };
+
+  // Draw the player on the screen, required method for game
+  render() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
 }
 
@@ -100,13 +100,19 @@ function endGame(isGameOver, isGameWon) {
     if (isGameWon == true) {
       // Notify the user
       alert('You won the game! XD');
+      // Reset the isGameWon variable's value
+      isGameWon = false;
     }
     // Or if the game was lost
     else {
       // Notify the user
       alert('You lost the game! T_T');
     }
+    // Reset the isGameOver variable's value
+    isGameOver = false;
   }
+  // Return the updated values of game status variables
+  return [isGameOver, isGameWon];
 }
 
 // Now instantiate your objects.
