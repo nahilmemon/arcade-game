@@ -1,12 +1,14 @@
 // Global Variables
+// Canvas dimensions
 let canvasWidth = 505;
 let canvasHeight = 606;
 let rowWidth = 83;
 let colWidth = 101;
 let numRows = 5;
 let numCols = 6;
-// xStep = colWidth*(0-4);
-// yStep = canvasHeight - rowWidth*(11/4) - 83*(0-5);
+// Game status
+let gameOver = false;
+let gameWon = false;
 
 // Enemies our player must avoid
 class Enemy {
@@ -79,6 +81,31 @@ class Player {
     // Then figure out the correct x and y positions accordingly
     this.x = colWidth*this.rowPos;
     this.y = canvasHeight - rowWidth*(11/4) - 83*this.colPos;
+
+    // Check if the game has been won (i.e. if the player reached
+    // the river successfully)
+    if (this.colPos == (numCols - 1)) {
+      gameOver = true;
+      gameWon = true;
+      endGame(gameOver, gameWon);
+    }
+  }
+}
+
+// Alert the user when the game is over and if it was won or lost
+function endGame(isGameOver, isGameWon) {
+  // Check if the game is over
+  if (isGameOver) {
+    // Check if the game was won
+    if (isGameWon == true) {
+      // Notify the user
+      alert('You won the game! XD');
+    }
+    // Or if the game was lost
+    else {
+      // Notify the user
+      alert('You lost the game! T_T');
+    }
   }
 }
 
