@@ -1,3 +1,13 @@
+// Global Variables
+let canvasWidth = 505;
+let canvasHeight = 606;
+let rowWidth = 83;
+let colWidth = 101;
+let numRows = 5;
+let numCols = 6;
+// xStep = colWidth*(0-4);
+// yStep = canvasHeight - rowWidth*(11/4) - 83*(0-5);
+
 // Enemies our player must avoid
 class Enemy {
   constructor() {
@@ -28,10 +38,13 @@ class Enemy {
 // a handleInput() method.
 class Player {
   constructor() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-    this.x = 100;
-    this.y = 100;
+    // First figure out the correct row and column position
+    // for the player
+    this.rowPos = 2;
+    this.colPos = 0;
+    // Then figure out the correct x and y positions accordingly
+    this.x = colWidth*this.rowPos;
+    this.y = canvasHeight - rowWidth*(11/4) - 83*this.colPos;
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/char-boy.png';
@@ -50,8 +63,22 @@ class Player {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
 
-  handleInput() {
-
+  handleInput(keyPressed) {
+    // Move the player according to the key pressed without crossing
+    // the boundaries of the game
+    // First figure out the correct row and column position
+    if (keyPressed == 'left' && this.rowPos > 0) {
+      this.rowPos -= 1;
+    } else if (keyPressed == 'right' && this.rowPos < (numRows - 1)) {
+      this.rowPos += 1;
+    } else if (keyPressed == 'up' && this.colPos < (numCols - 1)) {
+      this.colPos += 1;
+    } else if (keyPressed == 'down' && this.colPos > 0) {
+      this.colPos -= 1;
+    }
+    // Then figure out the correct x and y positions accordingly
+    this.x = colWidth*this.rowPos;
+    this.y = canvasHeight - rowWidth*(11/4) - 83*this.colPos;
   }
 }
 
