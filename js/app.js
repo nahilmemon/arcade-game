@@ -46,6 +46,12 @@ class Enemy {
     }
   };
 
+  // Draw the enemy on the screen, required method for game
+  render() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  };
+
+  // Check if the enemy has collided with the player
   checkCollision(player) {
     // Enemy boundaries
     let leftBoundaryEnemy = this.x + this.leftOffset;
@@ -59,21 +65,21 @@ class Enemy {
     let topBoundaryPlayer = player.y + player.topOffset;
     let bottomBoundaryPlayer = player.y + player.topOffset + player.actualHeight;
 
+    // Check if the enemy and the player overlap each other
     if (leftBoundaryEnemy < rightBoundaryPlayer &&
      rightBoundaryEnemy > leftBoundaryPlayer &&
      topBoundaryEnemy < bottomBoundaryPlayer &&
      bottomBoundaryEnemy > topBoundaryPlayer) {
-      console.log('Collision!');
+      // If so, then end the game (as the game was lost)
       collisionOccurred = true;
       gameOver = true;
       gameWon = false;
-      [gameOver, gameWon] = endGame(gameOver, gameWon);
+      // End the game after a 10ms delay so that the user can actually see
+      // the collision overlap
+      setInterval(function(){
+        [gameOver, gameWon] = endGame(gameOver, gameWon);
+      }, 10);
     }
-  };
-
-  // Draw the enemy on the screen, required method for game
-  render() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   };
 }
 
@@ -135,6 +141,14 @@ class Player {
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
+
+  // Restart the player's position
+  restart() {
+    this.colPos = 2;
+    this.rowPos = 0;
+    this.x = colWidth*this.colPos;
+    this.y = canvasHeight - rowWidth*(11/4) - 83*this.rowPos;
+  }
 }
 
 // Alert the user when the game is over and if it was won or lost
@@ -156,6 +170,8 @@ function endGame(isGameOver, isGameWon) {
     }
     // Reset the isGameOver variable's value
     isGameOver = false;
+    // Restart the player's position
+    player.restart();
   }
   // Return the updated values of game status variables
   return [isGameOver, isGameWon];
