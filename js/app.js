@@ -9,6 +9,7 @@ let numCols = 5;
 // Game status
 let gameOver = false;
 let gameWon = false;
+let collisionOccurred = false;
 
 // Enemies our player must avoid
 class Enemy {
@@ -19,6 +20,11 @@ class Enemy {
     this.x = 0;
     this.y = canvasHeight - rowWidth*(11/4) - 83*this.rowPos;
     this.speed = 50;
+    // Enemy's dimensions
+    this.actualWidth = 97;
+    this.actualHeight = 66;
+    this.leftOffset = 1.5;
+    this.topOffset = 77.5;
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
@@ -40,6 +46,31 @@ class Enemy {
     }
   };
 
+  checkCollision(player) {
+    // Enemy boundaries
+    let leftBoundaryEnemy = this.x + this.leftOffset;
+    let rightBoundaryEnemy = this.x + this.leftOffset + this.actualWidth;
+    let topBoundaryEnemy = this.y + this.topOffset;
+    let bottomBoundaryEnemy = this.y + this.topOffset + this.actualHeight;
+
+    // Player Boundaries
+    let leftBoundaryPlayer = player.x + player.leftOffset;
+    let rightBoundaryPlayer = player.x + player.leftOffset + player.actualWidth;
+    let topBoundaryPlayer = player.y + player.topOffset;
+    let bottomBoundaryPlayer = player.y + player.topOffset + player.actualHeight;
+
+    if (leftBoundaryEnemy < rightBoundaryPlayer &&
+     rightBoundaryEnemy > leftBoundaryPlayer &&
+     topBoundaryEnemy < bottomBoundaryPlayer &&
+     bottomBoundaryEnemy > topBoundaryPlayer) {
+      console.log('Collision!');
+      collisionOccurred = true;
+      gameOver = true;
+      gameWon = false;
+      [gameOver, gameWon] = endGame(gameOver, gameWon);
+    }
+  };
+
   // Draw the enemy on the screen, required method for game
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -51,13 +82,17 @@ class Enemy {
 // a handleInput() method.
 class Player {
   constructor() {
-    // First figure out the correct row and column position
-    // for the player
+    // Player's intial row and column positions
     this.colPos = 2;
     this.rowPos = 0;
-    // Then figure out the correct x and y positions accordingly
+    // Player's x and y positions based on row and column positions
     this.x = colWidth*this.colPos;
     this.y = canvasHeight - rowWidth*(11/4) - 83*this.rowPos;
+    // Player's dimensions
+    this.actualWidth = 62;
+    this.actualHeight = 76;
+    this.leftOffset = 20;
+    this.topOffset = 63.5;
     // The image/sprite for the player, which uses
     // a helper function to easily load images
     this.sprite = 'images/char-boy.png';
@@ -117,6 +152,7 @@ function endGame(isGameOver, isGameWon) {
     else {
       // Notify the user
       alert('You lost the game! T_T');
+      collisionOccurred = false;
     }
     // Reset the isGameOver variable's value
     isGameOver = false;
