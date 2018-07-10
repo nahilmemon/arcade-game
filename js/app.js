@@ -13,36 +13,56 @@ let collisionOccurred = false;
 
 // Enemies our player must avoid
 class Enemy {
-  constructor() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-    this.rowPos = 2; // 2, 3, or 4
-    this.x = 0;
+  constructor(row, rowDirection, startXCol, movementSpeed) {
+    // Determine the enemy's y position
+    this.rowPos = row; // 2, 3, or 4
     this.y = canvasHeight - rowWidth*(11/4) - 83*this.rowPos;
-    this.speed = 50;
+    // Determine the enemy's x position
+    this.x = colWidth*startXCol;
+    // Enemy's speed
+    this.speed = movementSpeed;
     // Enemy's dimensions
     this.actualWidth = 97;
     this.actualHeight = 66;
     this.leftOffset = 1.5;
     this.topOffset = 77.5;
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
+    // Enemy's direction
+    this.direction = rowDirection;
+    // Choose the sprite (enemy's orientation) based on the
+    // enemy's direction. The image/sprite uses a helper
+    // function to easily load images
+    if (this.direction == 0) {
+      this.sprite = 'images/enemy-bug-ltr.png';
+    } else  {
+      this.sprite = 'images/enemy-bug-rtl.png';
+    }
   }
 
-  // Update the enemy's position, required method for game
+  // Update the enemy's position
   // Parameter: dt, a time delta between ticks
   update(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-    // If the enemy has not reached the other side of the canvas
-    if (this.x < canvasWidth) {
-      // then move the enemy right
-      this.x += this.speed*dt;
-    } else {
-      // otherwise, reset the position of the enemy
-      this.x = -101;
+    const offset = 10; // used to help reset the enemy's position
+    // Movement is multiplied by the dt parameter to ensure the
+    // game runs at the same speed for all computers.
+    // If the enemy is moving from left to right:
+    if (this.direction == 0) {
+      // If the enemy has not reached the other side of the canvas
+      if (this.x < (canvasWidth + colWidth*offset)) {
+        // then move the enemy right
+        this.x += this.speed*dt;
+      } else {
+        // reset the enemy's position
+        this.x = -colWidth - colWidth*offset;
+      }
+    } else { // If the enemy if moving from right to left:
+      // If the enemy has not reached the other side of the canvas
+      if (this.x > (-colWidth - colWidth*offset)) {
+        // then move the enemy left
+        this.x -= this.speed*dt;
+      } else {
+        // reset the enemy's position
+        this.x = canvasWidth + colWidth*offset;
+      }
     }
   };
 
@@ -95,7 +115,7 @@ class Player {
     this.x = colWidth*this.colPos;
     this.y = canvasHeight - rowWidth*(11/4) - 83*this.rowPos;
     // Player's dimensions
-    this.actualWidth = 62;
+    this.actualWidth = 61;
     this.actualHeight = 76;
     this.leftOffset = 20;
     this.topOffset = 63.5;
@@ -177,10 +197,43 @@ function endGame(isGameOver, isGameWon) {
   return [isGameOver, isGameWon];
 }
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-let allEnemies = [new Enemy()];
+// Return a random integer from within the given range
+function getRandomInteger(start, end) {
+  return Math.floor(Math.random() * (end - start + 1)) + start;
+}
+
+// Create an array of enemies with random positioning and speeds
+// and running in opposite directions for each row
+function createArrayOfEnemies() {
+  let arrayOfEnemies = [];
+  const spacing = 4; // the spacing between each enemy in each row
+  // Iterate through each stone row
+  for (let i=2; i<5; i++) {
+    // Determine a random speed for the enemies in each row
+    const speed = getRandomInteger(50, 150);
+    // Alternate direction for each row
+    const direction = i%2;
+    // Create 8 enemies within each row.
+    for (let j=-3; j<4; j++) {
+      // Determine the column in which the enemy will initialize.
+      // This is determined according to index of the enemy in the
+      // current row, the set spacing provided for the row, and
+      // a random increment in spacing so that the enemies don't
+      // march with a uniform spacing. Some enemies will initialize
+      // before the visibile portion of the row begins, within the
+      // visible portion of the row, and after the visible portion
+      // of the row ends.
+      const startXCol = j*spacing + getRandomInteger(0, 2);
+      // Create and add an enemy to the arrayOfEnemies
+      arrayOfEnemies.push(new Enemy(i, direction, startXCol, speed));
+    }
+  }
+  return arrayOfEnemies;
+}
+
+// Instantiate enemy objects within allEnemies array
+let allEnemies = createArrayOfEnemies();
+// Instantiate the player object
 let player = new Player();
 
 // This listens for key presses and sends the keys to your
