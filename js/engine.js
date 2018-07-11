@@ -13,20 +13,65 @@
  * writing app.js a little simpler to work with.
  */
 
-var Engine = (function(global) {
+let Engine = (function(global) {
   /* Predefine the variables we'll be using within this scope,
    * create the canvas element, grab the 2D context for that canvas
    * set the canvas elements height/width and add it to the DOM.
    */
-  var doc = global.document,
+  let doc = global.document,
     win = global.window,
     canvas = doc.createElement('canvas'),
     ctx = canvas.getContext('2d'),
     lastTime;
 
-  canvas.width = 505;
-  canvas.height = 606;
+  let canvasMaxWidth = 505;
+  let canvasMaxHeight = 606;
+
+  canvas.width = canvasMaxWidth;
+  canvas.height = canvasMaxHeight;
+  changeCanvasSize();
   doc.body.appendChild(canvas);
+
+  // This function changes the size of the canvas based on the
+  // window's current size
+  function changeCanvasSize(){
+    // If the window's aspect ratio is greater than the canvas' aspect ratio
+    if (window.innerHeight/window.innerWidth > (canvasMaxHeight/canvasMaxWidth)){
+      // And if the window's width is smaller than the canvas' max width,
+      // then resize the canvas so that it takes up all of the window's width and
+      // the height is resized in proportion to the new width such that the original
+      // aspect ratio is maintained
+      if (window.innerWidth < canvasMaxWidth) {
+        let newCanvasHeight = canvasMaxHeight/canvasMaxWidth*window.innerWidth;
+        canvas.setAttribute('style', 'width: 100%; height: newCanvasHeight');
+      }
+      // Otherwise, use the canvas' max width and height dimensions so that it
+      // doesn't get too pixelated on larger screens
+      else {
+        canvas.setAttribute('style', 'width: canvasMaxWidth; height: canvasMaxHeight');
+      }
+    }
+    // Otherwise, if the window's aspect ratio is less than the canvas' aspect ratio
+    else {
+      // And if the window's height is smaller than the canvas' max height,
+      // then resize the canvas so that it takes up all of the window's height and
+      // the width is resized in proportion to the new height such that the original
+      // aspect ratio is maintained
+      if (window.innerHeight < canvasMaxHeight) {
+        let newCanvasWidth = canvasMaxWidth/canvasMaxHeight*window.innerHeight;
+        canvas.setAttribute('style', 'width: newCanvasWidth; height: 100vh');
+      }
+      // Otherwise, use the canvas' max width and height dimensions so that it
+      // doesn't get too pixelated on larger screens
+      else {
+        canvas.setAttribute('style', 'width: canvasMaxWidth; height: canvasMaxHeight');
+      }
+    }
+  }
+
+  // This changes the size of the canvas whenever the window is
+  // resized
+  window.addEventListener('resize', changeCanvasSize);
 
   /* This function serves as the kickoff point for the game loop itself
    * and handles properly calling the update and render methods.
