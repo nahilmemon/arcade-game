@@ -217,11 +217,14 @@ class Gear {
 
   // Reset the gear's position and appearance
   restart(player, pureReset) {
-    // If there was a collision between the player and an enemy,
+    // If there was a collision between the player and an enemy
+    // while the player had possession of the gear,
     // then drop the gear where the player was last standing
     if (pureReset == false) {
-      this.colPos = player.colPos;
-      this.rowPos = player.rowPos;
+      if (this.hasBeenCollected == true) {
+        this.colPos = player.colPos;
+        this.rowPos = player.rowPos;
+      }
     } else { // Otherwise, get a new random position for the gear
       this.colPos = getRandomInteger(0, numCols - 1);
       this.rowPos = getRandomInteger(1, 3);
