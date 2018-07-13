@@ -146,7 +146,7 @@ class Player {
 
     // Check if the game has been won (i.e. if the player reached
     // the river successfully)
-    if (this.rowPos == (numRows - 1)) {
+    if (this.rowPos == (numRows - 2)) {
       gameOver = true;
       gameWon = true;
       endGame(gameOver, gameWon);
@@ -214,7 +214,7 @@ function createArrayOfEnemies() {
   let arrayOfEnemies = [];
   const spacing = 4; // the spacing between each enemy in each row
   // Iterate through each stone row
-  for (let i=2; i<5; i++) {
+  for (let i=1; i<4; i++) {
     // Determine a random speed for the enemies in each row
     const speed = getRandomInteger(50, 150);
     // Alternate direction for each row

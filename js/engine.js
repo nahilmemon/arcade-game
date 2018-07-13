@@ -164,11 +164,11 @@ let Engine = (function(global) {
      */
     var rowImages = [
         'images/water-block.png',   // Top row is water
+        'images/wood-block.png',    // Next row is wood
         'images/stone-block.png',   // Row 1 of 3 of stone
         'images/stone-block.png',   // Row 2 of 3 of stone
         'images/stone-block.png',   // Row 3 of 3 of stone
-        'images/grass-block.png',   // Row 1 of 2 of grass
-        'images/grass-block.png'    // Row 2 of 2 of grass
+        'images/grass-block.png'   // Bottom row is grass
       ],
       numRows = 6,
       numCols = 5,
@@ -228,8 +228,10 @@ let Engine = (function(global) {
     'images/stone-block.png',
     'images/water-block.png',
     'images/grass-block.png',
+    'images/wood-block.png',
     'images/enemy-bug-ltr.png',
     'images/enemy-bug-rtl.png',
+    'images/fishing-pole.png',
     'images/char-boy.png'
   ]);
   Resources.onReady(init);
