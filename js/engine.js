@@ -26,11 +26,12 @@ let Engine = (function(global) {
 
   const canvasMaxWidth = 505;
   const canvasMaxHeight = 606;
+  const gameArea = doc.querySelector('.game');
 
   canvas.width = canvasMaxWidth;
   canvas.height = canvasMaxHeight;
   changeCanvasSize();
-  doc.body.appendChild(canvas);
+  gameArea.insertBefore(canvas, doc.querySelector('#button-help'));
 
   // This function changes the size of the canvas based on the
   // window's current size
@@ -44,11 +45,13 @@ let Engine = (function(global) {
       if (window.innerWidth < canvasMaxWidth) {
         const newCanvasHeight = canvasMaxHeight/canvasMaxWidth*window.innerWidth;
         canvas.setAttribute('style', `width: 100%; height: ${newCanvasHeight}px`);
+        gameArea.setAttribute('style', `width: 100%; height: ${newCanvasHeight}px`);
       }
       // Otherwise, use the canvas' max width and height dimensions so that it
       // doesn't get too pixelated on larger screens
       else {
         canvas.setAttribute('style', `width: ${canvasMaxWidth}px; height: ${canvasMaxHeight}px`);
+        gameArea.setAttribute('style', `width: ${canvasMaxWidth}px; height: ${canvasMaxHeight}px`);
       }
     }
     // Otherwise, if the window's aspect ratio is less than the canvas' aspect ratio
@@ -60,11 +63,13 @@ let Engine = (function(global) {
       if (window.innerHeight < canvasMaxHeight) {
         const newCanvasWidth = canvasMaxWidth/canvasMaxHeight*window.innerHeight;
         canvas.setAttribute('style', `width: ${newCanvasWidth}px; height: 100vh`);
+        gameArea.setAttribute('style', `width: ${newCanvasWidth}px; height: 100vh`);
       }
       // Otherwise, use the canvas' max width and height dimensions so that it
       // doesn't get too pixelated on larger screens
       else {
         canvas.setAttribute('style', `width: ${canvasMaxWidth}px; height: ${canvasMaxHeight}px`);
+        gameArea.setAttribute('style', `width: ${canvasMaxWidth}px; height: ${canvasMaxHeight}px`);
       }
     }
   }

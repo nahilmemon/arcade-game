@@ -1,4 +1,4 @@
-// Global Variables
+// --- GLOBAL VARIABLES --- //
 // Canvas dimensions
 let canvasWidth = 505;
 let canvasHeight = 606;
@@ -10,7 +10,12 @@ let numCols = 5;
 let gameOver = false;
 let gameWon = false;
 let collisionOccurred = false;
+// Modal
+const modalHelp = document.querySelector('#modal-help');
+const buttonHelp = document.querySelector('#button-help');
+const modalOverlay = document.querySelector('.modal-overlay');
 
+// --- CLASSES --- //
 // Enemies our player must avoid
 class Enemy {
   constructor(row, rowDirection, startXCol, movementSpeed) {
@@ -171,6 +176,7 @@ class Player {
   }
 }
 
+// --- FUNCTIONS --- //
 // Alert the user when the game is over and if it was won or lost
 function endGame(isGameOver, isGameWon) {
   // Check if the game is over
@@ -231,11 +237,18 @@ function createArrayOfEnemies() {
   return arrayOfEnemies;
 }
 
+// Show/hide the game over modal
+function toggleModal(modal) {
+  modal.classList.toggle('modal-show');
+}
+
+// --- INSTANTIATIONS --- //
 // Instantiate enemy objects within allEnemies array
 let allEnemies = createArrayOfEnemies();
 // Instantiate the player object
 let player = new Player();
 
+// --- EVENT LISTENERS --- //
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
@@ -247,4 +260,20 @@ document.addEventListener('keyup', function(e) {
   };
 
   player.handleInput(allowedKeys[e.keyCode]);
+});
+
+// Have the instructions modal open upon page load
+window.addEventListener('load', function() {
+  toggleModal(modalHelp);
+});
+
+// Open/close the modal if the user clicks on the help button
+buttonHelp.addEventListener('click', function() {
+  toggleModal(modalHelp);
+});
+
+// Close the modal if the user clicks outside the modal when
+// it's currently opened
+modalOverlay.addEventListener('click', function() {
+  toggleModal(modalHelp);
 });

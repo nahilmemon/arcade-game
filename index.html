@@ -3,9 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <title>Effective JavaScript: Frogger</title>
+  <!-- Links to CSS -->
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+  <!-- Google Font: Montserrat -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:600" rel="stylesheet">
+  <!-- Main Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <section class="game">
+    <!-- Game Help Button -->
+    <button id="button-help"><i class="fas fa-question-circle"></i></button>
+  </section>
+
+
+  <!-- Game Help Modal -->
+  <section class="modal modal-effect" id="modal-help">
+    <div class="modal-content">
+      <!-- Header -->
+      <div class="modal-header">
+        <h2 class="modal-heading">Instructions</h2>
+      </div>
+      <!-- Body -->
+      <div class="modal-body">
+        <h3 class="modal-subheading">Story</h3>
+        <p>One day, Luka and her friends were bored and hungry, so they decided to go fishing. As they race over to the docks, a huge gust of wind preceding a stampede of humongous lady bugs sweeps over and they lose their fishing gear during all the madness. Help Luka and her friends find their fishing gear and get to the docks without getting stomped on.</p>
+        <h3 class="modal-subheading">How to Play</h3>
+        <p>Use the <i class="fas fa-arrow-up"></i>, <i class="fas fa-arrow-down"></i>, <i class="fas fa-arrow-left"></i>, and <i class="fas fa-arrow-right"></i> keys to move around.<br>
+        Collect the fishing rod before heading over to the docks.<br>
+        Only one friend can stand in one spot on the dock.<br>
+        If you get hit by a lady bug, you'll lose a life.<br>
+        Good luck!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal Overlay -->
+  <div class="modal-overlay"></div>
+
   <script src="js/resources.js"></script>
   <script src="js/app.js"></script>
   <script src="js/engine.js"></script>
