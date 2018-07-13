@@ -24,8 +24,8 @@ let Engine = (function(global) {
     ctx = canvas.getContext('2d'),
     lastTime;
 
-  let canvasMaxWidth = 505;
-  let canvasMaxHeight = 606;
+  const canvasMaxWidth = 505;
+  const canvasMaxHeight = 606;
 
   canvas.width = canvasMaxWidth;
   canvas.height = canvasMaxHeight;
@@ -42,13 +42,13 @@ let Engine = (function(global) {
       // the height is resized in proportion to the new width such that the original
       // aspect ratio is maintained
       if (window.innerWidth < canvasMaxWidth) {
-        let newCanvasHeight = canvasMaxHeight/canvasMaxWidth*window.innerWidth;
-        canvas.setAttribute('style', 'width: 100%; height: newCanvasHeight');
+        const newCanvasHeight = canvasMaxHeight/canvasMaxWidth*window.innerWidth;
+        canvas.setAttribute('style', `width: 100%; height: ${newCanvasHeight}px`);
       }
       // Otherwise, use the canvas' max width and height dimensions so that it
       // doesn't get too pixelated on larger screens
       else {
-        canvas.setAttribute('style', 'width: canvasMaxWidth; height: canvasMaxHeight');
+        canvas.setAttribute('style', `width: ${canvasMaxWidth}px; height: ${canvasMaxHeight}px`);
       }
     }
     // Otherwise, if the window's aspect ratio is less than the canvas' aspect ratio
@@ -58,13 +58,13 @@ let Engine = (function(global) {
       // the width is resized in proportion to the new height such that the original
       // aspect ratio is maintained
       if (window.innerHeight < canvasMaxHeight) {
-        let newCanvasWidth = canvasMaxWidth/canvasMaxHeight*window.innerHeight;
-        canvas.setAttribute('style', 'width: newCanvasWidth; height: 100vh');
+        const newCanvasWidth = canvasMaxWidth/canvasMaxHeight*window.innerHeight;
+        canvas.setAttribute('style', `width: ${newCanvasWidth}px; height: 100vh`);
       }
       // Otherwise, use the canvas' max width and height dimensions so that it
       // doesn't get too pixelated on larger screens
       else {
-        canvas.setAttribute('style', 'width: canvasMaxWidth; height: canvasMaxHeight');
+        canvas.setAttribute('style', `width: ${canvasMaxWidth}px; height: ${canvasMaxHeight}px`);
       }
     }
   }
