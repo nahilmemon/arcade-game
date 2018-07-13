@@ -138,7 +138,7 @@ class Player {
       this.colPos -= 1;
     } else if (keyPressed == 'right' && this.colPos < (numCols - 1)) {
       this.colPos += 1;
-    } else if (keyPressed == 'up' && this.rowPos < (numRows - 1)) {
+    } else if (keyPressed == 'up' && this.rowPos < (numRows - 2)) {
       this.rowPos += 1;
     } else if (keyPressed == 'down' && this.rowPos > 0) {
       this.rowPos -= 1;
