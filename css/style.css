@@ -11,19 +11,21 @@ body {
   margin: 0 auto;
 }
 
-#button-help {
-  position: absolute;
-  right: 3%;
-  display: block;
-  top: 10%;
-  height: 3.7%;
-  width: 4%;
+button {
   background-color: transparent;
   border: none;
   cursor: pointer;
   font: inherit;
   color: white;
-  font-size: 1em;
+}
+
+#button-help {
+  position: absolute;
+  right: 3%;
+  display: block;
+  top: 10%;
+  height: 5.3%;
+  width: 6.3%;
 }
 
 @media screen and (max-width: 400px) {
@@ -122,10 +124,19 @@ body {
   padding: 1em;
   background: #62c2f9;
   color: #fff;
+  position: relative;
 }
 
 .modal-heading {
   margin: 0.3333em 0;
+}
+
+.button-close-modal {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 0.3333em;
+  font-size: 1.5em;
 }
 
 /* Modal Body */

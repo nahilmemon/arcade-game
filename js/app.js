@@ -13,6 +13,7 @@ let collisionOccurred = false;
 // Modal
 const buttonHelp = document.querySelector('#button-help');
 const modalOverlay = document.querySelector('.modal-overlay');
+const modalCloseButtons = document.querySelectorAll('.button-close-modal');
 
 // --- CLASSES --- //
 // Enemies our player must avoid
@@ -303,3 +304,10 @@ buttonHelp.addEventListener('click', function() {
 modalOverlay.addEventListener('click', function() {
   toggleModal(0, false);
 });
+
+// Close the modal if the user clicks the close modal button
+for (const closeButton of modalCloseButtons) {
+  closeButton.addEventListener('click', function() {
+    toggleModal(0, false);
+  });
+}
