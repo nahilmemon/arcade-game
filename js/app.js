@@ -145,8 +145,8 @@ class Player {
     }
 
     // Check if the game has been won (i.e. if the player reached
-    // the river successfully)
-    if (this.rowPos == (numRows - 2)) {
+    // the river successfully and has the gear collected)
+    if (this.rowPos == (numRows - 2) && gear.hasBeenCollected == true) {
       gameOver = true;
       gameWon = true;
       endGame(gameOver, gameWon);
@@ -176,6 +176,64 @@ class Player {
   }
 }
 
+// Fishing gear that the player needs to collect
+class Gear {
+  constructor() {
+    // Gear's intial row and column positions
+    this.colPos = getRandomInteger(0, numCols - 1);
+    this.rowPos = getRandomInteger(1, 3);
+    // Gear's x and y positions based on row and column positions
+    this.x = colWidth*this.colPos;
+    this.y = canvasHeight - rowWidth*(11/4) - 83*this.rowPos;
+    // Has the rod been collected
+    this.hasBeenCollected = false;
+    // The image/sprite for the player, which uses
+    // a helper function to easily load images
+    this.sprite = 'images/fishing-pole.png';
+  }
+
+  // Draw the fishing gear on screen if it hasn't been collected
+  // yet
+  render() {
+    if (this.hasBeenCollected == false) {
+      ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+  };
+
+  // Check if the player has reached where the gear is, and let
+  // the player "collect" the gear (i.e. hide the gear)
+  checkCollision(player) {
+    // Check if the gear and the player overlap each other
+    if (this.rowPos == player.rowPos &&
+     this.colPos == player.colPos) {
+      // If so, then hide the gear item
+      this.hasBeenCollected = true;
+      this.rowPos = null;
+      this.colPos = null;
+      this.x = null;
+      this.y = null;
+    }
+  };
+
+  // Reset the gear's position and appearance
+  restart(player, pureReset) {
+    // If there was a collision between the player and an enemy,
+    // then drop the gear where the player was last standing
+    if (pureReset == false) {
+      this.colPos = player.colPos;
+      this.rowPos = player.rowPos;
+    } else { // Otherwise, get a new random position for the gear
+      this.colPos = getRandomInteger(0, numCols - 1);
+      this.rowPos = getRandomInteger(1, 3);
+    }
+    // Gear's x and y positions based on row and column positions
+    this.x = colWidth*this.colPos;
+    this.y = canvasHeight - rowWidth*(11/4) - 83*this.rowPos;
+    // Has the rod been collected
+    this.hasBeenCollected = false;
+  }
+}
+
 // --- FUNCTIONS --- //
 // Alert the user when the game is over and if it was won or lost
 function endGame(isGameOver, isGameWon) {
@@ -196,6 +254,8 @@ function endGame(isGameOver, isGameWon) {
     }
     // Reset the isGameOver variable's value
     isGameOver = false;
+    // Restart the gear's position and state
+    gear.restart(player, false);
     // Restart the player's position
     player.restart();
   }
@@ -265,6 +325,8 @@ function toggleModal(modalContents, reveal) {
 let allEnemies = createArrayOfEnemies();
 // Instantiate the player object
 let player = new Player();
+// Instantiate the fishing pole object
+let gear = new Gear();
 
 // --- EVENT LISTENERS --- //
 // This listens for key presses and sends the keys to your
