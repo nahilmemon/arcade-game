@@ -11,7 +11,6 @@ let gameOver = false;
 let gameWon = false;
 let collisionOccurred = false;
 // Modal
-const modalHelp = document.querySelector('#modal-help');
 const buttonHelp = document.querySelector('#button-help');
 const modalOverlay = document.querySelector('.modal-overlay');
 
@@ -184,14 +183,14 @@ function endGame(isGameOver, isGameWon) {
     // Check if the game was won
     if (isGameWon == true) {
       // Notify the user
-      alert('You won the game! XD');
+      toggleModal(1, true);
       // Reset the isGameWon variable's value
       isGameWon = false;
     }
     // Or if the game was lost
     else {
       // Notify the user
-      alert('You lost the game! T_T');
+      // alert('You lost the game! T_T');
       collisionOccurred = false;
     }
     // Reset the isGameOver variable's value
@@ -237,9 +236,27 @@ function createArrayOfEnemies() {
   return arrayOfEnemies;
 }
 
-// Show/hide the game over modal
-function toggleModal(modal) {
-  modal.classList.toggle('modal-show');
+// Show/hide the given modal and the desired contents to go with it
+function toggleModal(modalContents, reveal) {
+  // Toggle the display of the desired contents of the modal
+  const modalHelp = document.querySelector('#modal-help');
+  const modalGameWon = document.querySelector('#modal-game-won');
+  // If the modal needs to be revealed, then reveal the correct
+  // modal based on the modalContents input given
+  if (reveal == true) {
+    // Reveal the help modal
+    if (modalContents == 0) {
+      modalHelp.classList.add('modal-show');
+    } else { // Reveal the game won modal
+      modalGameWon.classList.add('modal-show');
+      // Change the modal overlay color to match the contents
+      modalOverlay.classList.add('game-won-overlay');
+    }
+  } else { // Otherwise, hide all the modals and reset the overlay
+    modalHelp.classList.remove('modal-show');
+    modalGameWon.classList.remove('modal-show');
+    modalOverlay.classList.remove('game-won-overlay');
+  }
 }
 
 // --- INSTANTIATIONS --- //
@@ -264,16 +281,16 @@ document.addEventListener('keyup', function(e) {
 
 // Have the instructions modal open upon page load
 window.addEventListener('load', function() {
-  toggleModal(modalHelp);
+  toggleModal(0, true);
 });
 
 // Open/close the modal if the user clicks on the help button
 buttonHelp.addEventListener('click', function() {
-  toggleModal(modalHelp);
+  toggleModal(0, true);
 });
 
 // Close the modal if the user clicks outside the modal when
 // it's currently opened
 modalOverlay.addEventListener('click', function() {
-  toggleModal(modalHelp);
+  toggleModal(0, false);
 });

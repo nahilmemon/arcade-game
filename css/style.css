@@ -164,6 +164,21 @@ body {
   }
 }
 
+/* Game won modal color scheme */
+.game-won-overlay {
+  background: rgba(7, 183, 115, 0.8);
+}
+
+.game-won {
+  background: #fff;
+  color: #07b773;
+}
+
+.game-won-inverted {
+  background: #07b773;
+  color: #fff;
+}
+
 /*
  * Typography
  */
