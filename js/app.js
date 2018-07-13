@@ -273,10 +273,19 @@ document.addEventListener('keyup', function(e) {
     37: 'left',
     38: 'up',
     39: 'right',
-    40: 'down'
+    40: 'down',
+    13: 'enter',
+    27: 'escape'
   };
 
-  player.handleInput(allowedKeys[e.keyCode]);
+  // Based on the keyboard input, hide the modal or
+  // move the player around
+  if (allowedKeys[e.keyCode] == 'enter'
+   || allowedKeys[e.keyCode] == 'escape') {
+    toggleModal(0, false);
+  } else {
+    player.handleInput(allowedKeys[e.keyCode]);
+  }
 });
 
 // Have the instructions modal open upon page load
