@@ -289,11 +289,6 @@ document.addEventListener('keyup', function(e) {
   }
 });
 
-// Have the instructions modal open upon page load
-window.addEventListener('load', function() {
-  toggleModal(0, true);
-});
-
 // Open/close the modal if the user clicks on the help button
 buttonHelp.addEventListener('click', function() {
   toggleModal(0, true);

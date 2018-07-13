@@ -11,6 +11,21 @@ body {
   margin: 0 auto;
 }
 
+#game-title {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  margin-top: 5px;
+}
+
+@media screen and (max-width: 475px) {
+  #game-title {
+    /*margin-top: 0;*/
+    font-size: 1.5em;
+  }
+}
+
+/* Buttons */
 button {
   background-color: transparent;
   border: none;
@@ -205,7 +220,10 @@ h6 {
 
 body {
   font: 600 1em/1.25 'Montserrat', Verdana, sans-serif;
-  color: #987f64;
+  color: #5066d5;
+  /* Background pattern taken from:
+  https://www.pinterest.com/pin/231794712057456228/ */
+  background: #fff url(../images/wallpaper.jpg);
 }
 
 select {
