@@ -10,6 +10,7 @@ let numCols = 5;
 let gameOver = false;
 let gameWon = false;
 let collisionOccurred = false;
+let resetGame = false;
 // Modal
 const buttonHelp = document.querySelector('#button-help');
 const modalOverlay = document.querySelector('.modal-overlay');
@@ -317,6 +318,12 @@ function toggleModal(modalContents, reveal) {
       modalOverlay.classList.add('game-won-overlay');
     }
   } else { // Otherwise, hide all the modals and reset the overlay
+    // First check if the game won modal was the modal currently open
+    if (modalGameWon.classList.contains('modal-show')) {
+      // If so, reset the game upon closing the modal
+      resetGame = true; // the game will reset in engine.js
+    }
+    // Then hide all the modals
     modalHelp.classList.remove('modal-show');
     modalGameWon.classList.remove('modal-show');
     modalOverlay.classList.remove('game-won-overlay');
@@ -341,14 +348,17 @@ document.addEventListener('keyup', function(e) {
     39: 'right',
     40: 'down',
     13: 'enter',
-    27: 'escape'
+    27: 'escape',
+    82: 'restart'
   };
 
-  // Based on the keyboard input, hide the modal or
-  // move the player around
+  // Based on the keyboard input, hide the modal, reset
+  // the game, or move the player around
   if (allowedKeys[e.keyCode] == 'enter'
    || allowedKeys[e.keyCode] == 'escape') {
     toggleModal(0, false);
+  } else if (allowedKeys[e.keyCode] == 'restart') {
+    resetGame = true;
   } else {
     player.handleInput(allowedKeys[e.keyCode]);
   }

@@ -130,6 +130,11 @@ let Engine = (function(global) {
   function update(dt) {
     updateEntities(dt);
     checkCollisions();
+    // Reset the game if need be
+    if (resetGame == true) {
+      resetGame = false;
+      init();
+    }
   }
 
   /* This is called by the update function and loops through all of the
@@ -220,7 +225,9 @@ let Engine = (function(global) {
    * those sorts of things. It's only called once by the init() method.
    */
   function reset() {
-    // noop
+    gear.restart();
+    player.restart();
+    allEnemies = createArrayOfEnemies();
   }
 
   /* Go ahead and load all of the images we know we're going to need to
