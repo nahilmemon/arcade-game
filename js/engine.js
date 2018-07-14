@@ -24,34 +24,34 @@ let Engine = (function(global) {
     ctx = canvas.getContext('2d'),
     lastTime;
 
-  const canvasMaxWidth = 505;
-  const canvasMaxHeight = 606;
-  const gameArea = doc.querySelector('.game');
+  const CANVAS_MAX_WIDTH = 505;
+  const CANVAS_MAX_HEIGHT = 606;
+  const GAME_AREA = doc.querySelector('.game');
 
-  canvas.width = canvasMaxWidth;
-  canvas.height = canvasMaxHeight;
+  canvas.width = CANVAS_MAX_WIDTH;
+  canvas.height = CANVAS_MAX_HEIGHT;
   changeCanvasSize();
-  gameArea.insertBefore(canvas, doc.querySelector('#button-help'));
+  GAME_AREA.insertBefore(canvas, doc.querySelector('#button-help'));
 
   // This function changes the size of the canvas based on the
   // window's current size
   function changeCanvasSize(){
     // If the window's aspect ratio is greater than the canvas' aspect ratio
-    if (window.innerHeight/window.innerWidth > (canvasMaxHeight/canvasMaxWidth)){
+    if (window.innerHeight/window.innerWidth > (CANVAS_MAX_HEIGHT/CANVAS_MAX_WIDTH)){
       // And if the window's width is smaller than the canvas' max width,
       // then resize the canvas so that it takes up all of the window's width and
       // the height is resized in proportion to the new width such that the original
       // aspect ratio is maintained
-      if (window.innerWidth < canvasMaxWidth) {
-        const newCanvasHeight = canvasMaxHeight/canvasMaxWidth*window.innerWidth;
-        canvas.setAttribute('style', `width: 100%; height: ${newCanvasHeight}px`);
-        gameArea.setAttribute('style', `width: 100%; height: ${newCanvasHeight}px`);
+      if (window.innerWidth < CANVAS_MAX_WIDTH) {
+        const NEW_CANVAS_HEIGHT = CANVAS_MAX_HEIGHT/CANVAS_MAX_WIDTH*window.innerWidth;
+        canvas.setAttribute('style', `width: 100%; height: ${NEW_CANVAS_HEIGHT}px`);
+        GAME_AREA.setAttribute('style', `width: 100%; height: ${NEW_CANVAS_HEIGHT}px`);
       }
       // Otherwise, use the canvas' max width and height dimensions so that it
       // doesn't get too pixelated on larger screens
       else {
-        canvas.setAttribute('style', `width: ${canvasMaxWidth}px; height: ${canvasMaxHeight}px`);
-        gameArea.setAttribute('style', `width: ${canvasMaxWidth}px; height: ${canvasMaxHeight}px`);
+        canvas.setAttribute('style', `width: ${CANVAS_MAX_WIDTH}px; height: ${CANVAS_MAX_HEIGHT}px`);
+        GAME_AREA.setAttribute('style', `width: ${CANVAS_MAX_WIDTH}px; height: ${CANVAS_MAX_HEIGHT}px`);
       }
     }
     // Otherwise, if the window's aspect ratio is less than the canvas' aspect ratio
@@ -60,16 +60,16 @@ let Engine = (function(global) {
       // then resize the canvas so that it takes up all of the window's height and
       // the width is resized in proportion to the new height such that the original
       // aspect ratio is maintained
-      if (window.innerHeight < canvasMaxHeight) {
-        const newCanvasWidth = canvasMaxWidth/canvasMaxHeight*window.innerHeight;
-        canvas.setAttribute('style', `width: ${newCanvasWidth}px; height: 100vh`);
-        gameArea.setAttribute('style', `width: ${newCanvasWidth}px; height: 100vh`);
+      if (window.innerHeight < CANVAS_MAX_HEIGHT) {
+        const NEW_CANVAS_WIDTH = CANVAS_MAX_WIDTH/CANVAS_MAX_HEIGHT*window.innerHeight;
+        canvas.setAttribute('style', `width: ${NEW_CANVAS_WIDTH}px; height: 100vh`);
+        GAME_AREA.setAttribute('style', `width: ${NEW_CANVAS_WIDTH}px; height: 100vh`);
       }
       // Otherwise, use the canvas' max width and height dimensions so that it
       // doesn't get too pixelated on larger screens
       else {
-        canvas.setAttribute('style', `width: ${canvasMaxWidth}px; height: ${canvasMaxHeight}px`);
-        gameArea.setAttribute('style', `width: ${canvasMaxWidth}px; height: ${canvasMaxHeight}px`);
+        canvas.setAttribute('style', `width: ${CANVAS_MAX_WIDTH}px; height: ${CANVAS_MAX_HEIGHT}px`);
+        GAME_AREA.setAttribute('style', `width: ${CANVAS_MAX_WIDTH}px; height: ${CANVAS_MAX_HEIGHT}px`);
       }
     }
   }
@@ -88,8 +88,8 @@ let Engine = (function(global) {
      * would be the same for everyone (regardless of how fast their
      * computer is) - hurray time!
      */
-    var now = Date.now();
-    var dt = (now - lastTime) / 1000.0;
+    let now = Date.now();
+    let dt = (now - lastTime) / 1000.0;
 
     /* Call our update/render functions, pass along the time delta to
      * our update function since it may be used for smooth animation.
@@ -170,7 +170,7 @@ let Engine = (function(global) {
     /* This array holds the relative URL to the image used
      * for that particular row of the game level.
      */
-    var rowImages = [
+    let rowImages = [
         'images/water-block.png',   // Top row is water
         'images/wood-block.png',    // Next row is wood
         'images/stone-block.png',   // Row 1 of 3 of stone

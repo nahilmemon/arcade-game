@@ -13,19 +13,19 @@ let gameWon = false;
 let collisionOccurred = false;
 let resetGame = false;
 // Modal
-const buttonHelp = document.querySelector('#button-help');
-const modalOverlay = document.querySelector('.modal-overlay');
-const modalCloseButtons = document.querySelectorAll('.button-close-modal');
+const BUTTON_HELP = document.querySelector('#button-help');
+const MODAL_OVERLAY = document.querySelector('.modal-overlay');
+const MODAL_CLOSE_BUTTONS = document.querySelectorAll('.button-close-modal');
 // Players
 let currentPlayerIndex = 0;
-const arrayPlayerSprites = [
+const ARRAY_PLAYER_SPRITES = [
   'images/char-cat-girl.png',
   'images/char-boy.png',
   'images/char-horn-girl.png',
   'images/char-pink-girl.png',
   'images/char-princess-girl.png'
 ];
-let finalPlayerID = arrayPlayerSprites.length - 1;
+let finalPlayerID = ARRAY_PLAYER_SPRITES.length - 1;
 
 // --- CLASSES --- //
 // Enemies our player must avoid
@@ -58,27 +58,27 @@ class Enemy {
   // Update the enemy's position
   // Parameter: dt, a time delta between ticks
   update(dt) {
-    const offset = 10; // used to help reset the enemy's position
+    const OFFSET = 10; // used to help reset the enemy's position
     // Movement is multiplied by the dt parameter to ensure the
     // game runs at the same speed for all computers.
     // If the enemy is moving from left to right:
     if (this.direction == 0) {
       // If the enemy has not reached the other side of the canvas
-      if (this.x < (canvasWidth + colWidth*offset)) {
+      if (this.x < (canvasWidth + colWidth*OFFSET)) {
         // then move the enemy right
         this.x += this.speed*dt;
       } else {
         // reset the enemy's position
-        this.x = -colWidth - colWidth*offset;
+        this.x = -colWidth - colWidth*OFFSET;
       }
     } else { // If the enemy if moving from right to left:
       // If the enemy has not reached the other side of the canvas
-      if (this.x > (-colWidth - colWidth*offset)) {
+      if (this.x > (-colWidth - colWidth*OFFSET)) {
         // then move the enemy left
         this.x -= this.speed*dt;
       } else {
         // reset the enemy's position
-        this.x = canvasWidth + colWidth*offset;
+        this.x = canvasWidth + colWidth*OFFSET;
       }
     }
   };
@@ -368,16 +368,16 @@ function getRandomInteger(start, end) {
 // and running in opposite directions for each row
 function createArrayOfEnemies() {
   let arrayOfEnemies = [];
-  const spacing = 4; // the spacing between each enemy in each row
+  const SPACING = 4; // the spacing between each enemy in each row
   // Iterate through each stone row
   for (let i=1; i<4; i++) {
     // Determine a random speed for the enemies in each row based on
     // the current level (player index being played)
-    const lowerSpeedLimit = 50 + currentPlayerIndex*25;
-    const upperSpeedLimit = 75 + currentPlayerIndex*25;
-    const speed = getRandomInteger(lowerSpeedLimit, upperSpeedLimit);
+    const LOWER_SPEED_LIMIT = 50 + currentPlayerIndex*25;
+    const UPPER_SPEED_LIMIT = 75 + currentPlayerIndex*25;
+    const SPEED = getRandomInteger(LOWER_SPEED_LIMIT, UPPER_SPEED_LIMIT);
     // Alternate direction for each row
-    const direction = i%2;
+    const DIRECTION = i%2;
     // Create 8 enemies within each row.
     for (let j=-3; j<4; j++) {
       // Determine the column in which the enemy will initialize.
@@ -388,9 +388,9 @@ function createArrayOfEnemies() {
       // before the visibile portion of the row begins, within the
       // visible portion of the row, and after the visible portion
       // of the row ends.
-      const startXCol = j*spacing + getRandomInteger(0, 2);
+      const START_X_COL = j*SPACING + getRandomInteger(0, 2);
       // Create and add an enemy to the arrayOfEnemies
-      arrayOfEnemies.push(new Enemy(i, direction, startXCol, speed));
+      arrayOfEnemies.push(new Enemy(i, DIRECTION, START_X_COL, SPEED));
     }
   }
   return arrayOfEnemies;
@@ -401,8 +401,8 @@ function createArrayOfPlayers() {
   let arrayOfPlayers = [];
   // Iterate through the array of player sprites,
   // and make new player with each sprite
-  for (let i=0; i<arrayPlayerSprites.length; i++) {
-    arrayOfPlayers.push(new Player(arrayPlayerSprites[i], i));
+  for (let i=0; i<ARRAY_PLAYER_SPRITES.length; i++) {
+    arrayOfPlayers.push(new Player(ARRAY_PLAYER_SPRITES[i], i));
   }
   // Display the first player
   arrayOfPlayers[0].active = true;
@@ -413,29 +413,29 @@ function createArrayOfPlayers() {
 // Show/hide the given modal and the desired contents to go with it
 function toggleModal(modalContents, reveal) {
   // Toggle the display of the desired contents of the modal
-  const modalHelp = document.querySelector('#modal-help');
-  const modalGameWon = document.querySelector('#modal-game-won');
+  const MODAL_HELP = document.querySelector('#modal-help');
+  const MODAL_GAME_WON = document.querySelector('#modal-game-won');
   // If the modal needs to be revealed, then reveal the correct
   // modal based on the modalContents input given
   if (reveal == true) {
     // Reveal the help modal
     if (modalContents == 0) {
-      modalHelp.classList.add('modal-show');
+      MODAL_HELP.classList.add('modal-show');
     } else { // Reveal the game won modal
-      modalGameWon.classList.add('modal-show');
+      MODAL_GAME_WON.classList.add('modal-show');
       // Change the modal overlay color to match the contents
-      modalOverlay.classList.add('game-won-overlay');
+      MODAL_OVERLAY.classList.add('game-won-overlay');
     }
   } else { // Otherwise, hide all the modals and reset the overlay
     // First check if the game won modal was the modal currently open
-    if (modalGameWon.classList.contains('modal-show')) {
+    if (MODAL_GAME_WON.classList.contains('modal-show')) {
       // If so, reset the game upon closing the modal
       resetGame = true; // the game will reset in engine.js
     }
     // Then hide all the modals
-    modalHelp.classList.remove('modal-show');
-    modalGameWon.classList.remove('modal-show');
-    modalOverlay.classList.remove('game-won-overlay');
+    MODAL_HELP.classList.remove('modal-show');
+    MODAL_GAME_WON.classList.remove('modal-show');
+    MODAL_OVERLAY.classList.remove('game-won-overlay');
   }
 }
 
@@ -485,19 +485,19 @@ document.addEventListener('keyup', function(e) {
 });
 
 // Open/close the modal if the user clicks on the help button
-buttonHelp.addEventListener('click', function() {
+BUTTON_HELP.addEventListener('click', function() {
   toggleModal(0, true);
 });
 
 // Close the modal if the user clicks outside the modal when
 // it's currently opened
-modalOverlay.addEventListener('click', function() {
+MODAL_OVERLAY.addEventListener('click', function() {
   toggleModal(0, false);
 });
 
 // Close the modal if the user clicks the close modal button
-for (const closeButton of modalCloseButtons) {
-  closeButton.addEventListener('click', function() {
+for (const CLOSE_BUTTON of MODAL_CLOSE_BUTTONS) {
+  CLOSE_BUTTON.addEventListener('click', function() {
     toggleModal(0, false);
   });
 }
