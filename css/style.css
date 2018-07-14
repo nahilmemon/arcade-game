@@ -251,16 +251,6 @@ h3 {
   line-height: 1.13636364;
 }
 
-h4 {
-  font-size: 1.125em;
-  line-height: 1.11111111;
-}
-
-blockquote {
-  font-size: 1.25em;
-  line-height: 1.25;
-}
-
 @media (min-width: 768px) {
   body {
     font-size: 1em;
@@ -281,27 +271,9 @@ blockquote {
     font-size: 1.5em;
     line-height: 1.25;
   }
-
-  h4 {
-    line-height: 1.22222222;
-  }
-
-  blockquote {
-    font-size: 1.5em;
-    line-height: 1.45833333;
-  }
-
-  .summary-statistic {
-    font-size: 2.5em;
-  }
 }
 
 @media (min-width: 992px) {
-  h1 {
-    font-size: 3em;
-    line-height: 1.05;
-  }
-
   h2 {
     font-size: 2.25em;
     line-height: 1.25;
@@ -310,9 +282,5 @@ blockquote {
   h3 {
     font-size: 1.75em;
     line-height: 1.25;
-  }
-
-  .summary-statistic  {
-    font-size: 3em;
   }
 }
