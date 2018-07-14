@@ -7,7 +7,8 @@ let colWidth = 101;
 let numRows = 6;
 let numCols = 5;
 // Game status
-let gameOver = false;
+let gameLost = false;
+let levelWon = false;
 let gameWon = false;
 let collisionOccurred = false;
 let resetGame = false;
@@ -15,6 +16,16 @@ let resetGame = false;
 const buttonHelp = document.querySelector('#button-help');
 const modalOverlay = document.querySelector('.modal-overlay');
 const modalCloseButtons = document.querySelectorAll('.button-close-modal');
+// Players
+let currentPlayerIndex = 0;
+const arrayPlayerSprites = [
+  'images/char-cat-girl.png',
+  'images/char-boy.png',
+  'images/char-horn-girl.png',
+  'images/char-pink-girl.png',
+  'images/char-princess-girl.png'
+];
+let finalPlayerID = arrayPlayerSprites.length - 1;
 
 // --- CLASSES --- //
 // Enemies our player must avoid
@@ -98,22 +109,21 @@ class Enemy {
      bottomBoundaryEnemy > topBoundaryPlayer) {
       // If so, then end the game (as the game was lost)
       collisionOccurred = true;
-      gameOver = true;
+      gameLost = true;
+      levelWon = false;
       gameWon = false;
       // End the game after a 10ms delay so that the user can actually see
       // the collision overlap
       setInterval(function(){
-        [gameOver, gameWon] = endGame(gameOver, gameWon);
+        [gameLost, levelWon, gameWon] = endGame(gameLost, levelWon, gameWon);
       }, 10);
     }
   };
 }
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+// Player class
 class Player {
-  constructor() {
+  constructor(spriteImage, index) {
     // Player's intial row and column positions
     this.colPos = 2;
     this.rowPos = 0;
@@ -127,7 +137,10 @@ class Player {
     this.topOffset = 63.5;
     // The image/sprite for the player, which uses
     // a helper function to easily load images
-    this.sprite = 'images/char-boy.png';
+    this.sprite = spriteImage;
+    this.ID = index;
+    this.active = false;
+    this.isVisible = false;
   }
 
   // Update the player's position based on the keyboard input given
@@ -139,18 +152,43 @@ class Player {
       this.colPos -= 1;
     } else if (keyPressed == 'right' && this.colPos < (numCols - 1)) {
       this.colPos += 1;
-    } else if (keyPressed == 'up' && this.rowPos < (numRows - 2)) {
-      this.rowPos += 1;
     } else if (keyPressed == 'down' && this.rowPos > 0) {
       this.rowPos -= 1;
     }
+    // Special case: Make sure the player can't move into the docks
+    // if the player did not collect the gear and/or if the dock
+    // is already filled with another player
+    else if (keyPressed == 'up') {
+      // If the player is not trying to move into the docks,
+      // then move up one row
+      if ((this.rowPos + 1) < (numRows - 2)) {
+        this.rowPos += 1;
+      }
+      // Otherwise, the player can only move into the docks
+      // if the gear has been collected and that particular
+      // column is empty
+      else if (gear.hasBeenCollected == true &&
+       docksFilledArray[this.colPos] == false) {
+        this.rowPos += 1;
+      }
+    }
 
     // Check if the game has been won (i.e. if the player reached
-    // the river successfully and has the gear collected)
+    // the docks successfully and has the gear collected)
     if (this.rowPos == (numRows - 2) && gear.hasBeenCollected == true) {
-      gameOver = true;
-      gameWon = true;
-      endGame(gameOver, gameWon);
+      gameLost = false;
+      levelWon = true;
+      // Remember which part of the dock was filled in
+      docksFilledArray[this.colPos] = true;
+      // If the final player was the currently active player,
+      // then the whole game was won
+      if (this.ID == finalPlayerID) {
+        gameWon = true;
+      } else {
+        gameWon = false;
+      }
+      // End the level and/or game
+      [gameLost, levelWon, gameWon] = endGame(gameLost, levelWon, gameWon);
     }
   }
 
@@ -163,9 +201,11 @@ class Player {
     this.y = canvasHeight - rowWidth*(11/4) - 83*this.rowPos;
   };
 
-  // Draw the player on the screen, required method for game
+  // Draw the player on the screen if it is currently active
   render() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    if (this.isVisible == true) {
+      ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
   }
 
   // Restart the player's position
@@ -186,9 +226,9 @@ class Gear {
     // Gear's x and y positions based on row and column positions
     this.x = colWidth*this.colPos;
     this.y = canvasHeight - rowWidth*(11/4) - 83*this.rowPos;
-    // Has the rod been collected
+    // Has the gear been collected
     this.hasBeenCollected = false;
-    // The image/sprite for the player, which uses
+    // The image/sprite for the fishing gear, which uses
     // a helper function to easily load images
     this.sprite = 'images/fishing-pole.png';
   }
@@ -240,31 +280,61 @@ class Gear {
 
 // --- FUNCTIONS --- //
 // Alert the user when the game is over and if it was won or lost
-function endGame(isGameOver, isGameWon) {
-  // Check if the game is over
-  if (isGameOver) {
-    // Check if the game was won
-    if (isGameWon == true) {
+function endGame(isGameLost, isLevelWon, isGameWon) {
+  // Check if the game was lost
+  if (isGameLost == true) {
+    // Alert the user?
+    // Reset the collisionOccurred boolean
+    collisionOccurred = false;
+    // Reset the isGameWon boolean
+    isGameWon = false;
+    // Reset the isLevelWon boolean
+    isLevelWon = false;
+    // Reset the isGameLost boolean
+    isGameLost = false;
+    // Restart the gear's position and state
+    // ---?
+    gear.restart(allPlayers[currentPlayerIndex], false);
+    // Restart the player's position
+    allPlayers[currentPlayerIndex].restart();
+  }
+  // Else check if the level and/or game were won
+  else {
+    // Check if the level and the game were won
+    if (isLevelWon == true && isGameWon == true) {
       // Notify the user
       toggleModal(1, true);
-      // Reset the isGameWon variable's value
+      // Reset the isGameWon boolean
       isGameWon = false;
+      // Reset the isLevelWon boolean
+      isLevelWon = false;
+      // Reset the isGameLost boolean
+      isGameLost = false;
+      // Restart the gear's position and state
+      // ---?
+      gear.restart(allPlayers[currentPlayerIndex], false);
     }
-    // Or if the game was lost
-    else {
-      // Notify the user
-      // alert('You lost the game! T_T');
-      collisionOccurred = false;
+    // Else check if only the level was won
+    else if (isLevelWon == true && isGameWon == false) {
+      // Change the currently active player
+      allPlayers[currentPlayerIndex].active = false;
+      currentPlayerIndex++;
+      allPlayers[currentPlayerIndex].active = true;
+      allPlayers[currentPlayerIndex].isVisible = true;
+      // Reset the gear
+      // ---?
+      gear.restart(allPlayers[currentPlayerIndex], true);
+      // Reset the enemies
+      allEnemies = createArrayOfEnemies();
+      // Reset the isGameWon boolean
+      isGameWon = false;
+      // Reset the isLevelWon boolean
+      isLevelWon = false;
+      // Reset the isGameLost boolean
+      isGameLost = false;
     }
-    // Reset the isGameOver variable's value
-    isGameOver = false;
-    // Restart the gear's position and state
-    gear.restart(player, false);
-    // Restart the player's position
-    player.restart();
   }
-  // Return the updated values of game status variables
-  return [isGameOver, isGameWon];
+  return [isGameLost, isLevelWon, isGameWon];
 }
 
 // Return a random integer from within the given range
@@ -279,8 +349,11 @@ function createArrayOfEnemies() {
   const spacing = 4; // the spacing between each enemy in each row
   // Iterate through each stone row
   for (let i=1; i<4; i++) {
-    // Determine a random speed for the enemies in each row
-    const speed = getRandomInteger(50, 150);
+    // Determine a random speed for the enemies in each row based on
+    // the current level (player index being played)
+    const lowerSpeedLimit = 50 + currentPlayerIndex*25;
+    const upperSpeedLimit = 75 + currentPlayerIndex*25;
+    const speed = getRandomInteger(lowerSpeedLimit, upperSpeedLimit);
     // Alternate direction for each row
     const direction = i%2;
     // Create 8 enemies within each row.
@@ -299,6 +372,20 @@ function createArrayOfEnemies() {
     }
   }
   return arrayOfEnemies;
+}
+
+// Create an array of players
+function createArrayOfPlayers() {
+  let arrayOfPlayers = [];
+  // Iterate through the array of player sprites,
+  // and make new player with each sprite
+  for (let i=0; i<arrayPlayerSprites.length; i++) {
+    arrayOfPlayers.push(new Player(arrayPlayerSprites[i], i));
+  }
+  // Display the first player
+  arrayOfPlayers[0].active = true;
+  arrayOfPlayers[0].isVisible = true;
+  return arrayOfPlayers;
 }
 
 // Show/hide the given modal and the desired contents to go with it
@@ -330,13 +417,24 @@ function toggleModal(modalContents, reveal) {
   }
 }
 
+// Reset the docksFilledArray
+function resetDocksFilledArray() {
+  let docksArray = [];
+  for (let i=0; i<numCols; i++) {
+    docksArray[i] = false;
+  }
+  return docksArray;
+}
+
 // --- INSTANTIATIONS --- //
-// Instantiate enemy objects within allEnemies array
+// Instantiate enemy objects within the allEnemies array
 let allEnemies = createArrayOfEnemies();
-// Instantiate the player object
-let player = new Player();
+// Instantiate the player objects within the allPlayers array
+let allPlayers = createArrayOfPlayers();
 // Instantiate the fishing pole object
 let gear = new Gear();
+// Instantiate the docksFilledArray
+let docksFilledArray = resetDocksFilledArray();
 
 // --- EVENT LISTENERS --- //
 // This listens for key presses and sends the keys to your
@@ -360,7 +458,7 @@ document.addEventListener('keyup', function(e) {
   } else if (allowedKeys[e.keyCode] == 'restart') {
     resetGame = true;
   } else {
-    player.handleInput(allowedKeys[e.keyCode]);
+    allPlayers[currentPlayerIndex].handleInput(allowedKeys[e.keyCode]);
   }
 });
 

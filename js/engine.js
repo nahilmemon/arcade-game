@@ -148,13 +148,15 @@ let Engine = (function(global) {
     allEnemies.forEach(function(enemy) {
       enemy.update(dt);
     });
-    player.update();
+    allPlayers.forEach(function(player) {
+      player.update(dt);
+    });
   }
 
   function checkCollisions() {
-    gear.checkCollision(player);
+    gear.checkCollision(allPlayers[currentPlayerIndex]);
     allEnemies.forEach(function(enemy) {
-      enemy.checkCollision(player);
+      enemy.checkCollision(allPlayers[currentPlayerIndex]);
     });
   }
 
@@ -217,7 +219,9 @@ let Engine = (function(global) {
       enemy.render();
     });
 
-    player.render();
+    allPlayers.forEach(function(player) {
+      player.render();
+    });
   }
 
   /* This function does nothing but it could have been a good place to
@@ -225,9 +229,11 @@ let Engine = (function(global) {
    * those sorts of things. It's only called once by the init() method.
    */
   function reset() {
-    gear.restart();
-    player.restart();
+    gear.restart(allPlayers[currentPlayerIndex], true);
+    currentPlayerIndex = 0;
+    allPlayers = createArrayOfPlayers();
     allEnemies = createArrayOfEnemies();
+    docksFilledArray = resetDocksFilledArray();
   }
 
   /* Go ahead and load all of the images we know we're going to need to
@@ -242,7 +248,11 @@ let Engine = (function(global) {
     'images/enemy-bug-ltr.png',
     'images/enemy-bug-rtl.png',
     'images/fishing-pole.png',
-    'images/char-boy.png'
+    'images/char-cat-girl.png',
+    'images/char-boy.png',
+    'images/char-horn-girl.png',
+    'images/char-pink-girl.png',
+    'images/char-princess-girl.png'
   ]);
   Resources.onReady(init);
 
