@@ -230,7 +230,15 @@ class Gear {
     this.hasBeenCollected = false;
     // The image/sprite for the fishing gear, which uses
     // a helper function to easily load images
-    this.sprite = 'images/fishing-pole.png';
+    this.ID = 0;
+    this.spritesArray = [
+      'images/fishing-pole.png',
+      'images/hook.png',
+      'images/net.png',
+      'images/bucket.png',
+      'images/canoe.png',
+    ];
+    this.sprite = this.spritesArray[this.ID];
   }
 
   // Draw the fishing gear on screen if it hasn't been collected
@@ -276,6 +284,22 @@ class Gear {
     // Has the rod been collected
     this.hasBeenCollected = false;
   }
+
+  // Rotate through the sprites array to change the sprite
+  changeSprite() {
+    if (this.ID < (this.spritesArray.length - 1)) {
+      this.ID += 1;
+    } else {
+      this.ID = 0;
+    }
+    this.sprite = this.spritesArray[this.ID];
+  }
+
+  // Reset the gear's sprite
+  resetSprite() {
+    this.ID = 0;
+    this.sprite = this.spritesArray[this.ID];
+  }
 }
 
 // --- FUNCTIONS --- //
@@ -283,7 +307,6 @@ class Gear {
 function endGame(isGameLost, isLevelWon, isGameWon) {
   // Check if the game was lost
   if (isGameLost == true) {
-    // Alert the user?
     // Reset the collisionOccurred boolean
     collisionOccurred = false;
     // Reset the isGameWon boolean
@@ -293,7 +316,6 @@ function endGame(isGameLost, isLevelWon, isGameWon) {
     // Reset the isGameLost boolean
     isGameLost = false;
     // Restart the gear's position and state
-    // ---?
     gear.restart(allPlayers[currentPlayerIndex], false);
     // Restart the player's position
     allPlayers[currentPlayerIndex].restart();
@@ -311,7 +333,6 @@ function endGame(isGameLost, isLevelWon, isGameWon) {
       // Reset the isGameLost boolean
       isGameLost = false;
       // Restart the gear's position and state
-      // ---?
       gear.restart(allPlayers[currentPlayerIndex], false);
     }
     // Else check if only the level was won
@@ -322,8 +343,9 @@ function endGame(isGameLost, isLevelWon, isGameWon) {
       allPlayers[currentPlayerIndex].active = true;
       allPlayers[currentPlayerIndex].isVisible = true;
       // Reset the gear
-      // ---?
       gear.restart(allPlayers[currentPlayerIndex], true);
+      // Change the gear's sprite
+      gear.changeSprite();
       // Reset the enemies
       allEnemies = createArrayOfEnemies();
       // Reset the isGameWon boolean

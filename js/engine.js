@@ -230,6 +230,7 @@ let Engine = (function(global) {
    */
   function reset() {
     gear.restart(allPlayers[currentPlayerIndex], true);
+    gear.resetSprite();
     currentPlayerIndex = 0;
     allPlayers = createArrayOfPlayers();
     allEnemies = createArrayOfEnemies();
@@ -248,6 +249,10 @@ let Engine = (function(global) {
     'images/enemy-bug-ltr.png',
     'images/enemy-bug-rtl.png',
     'images/fishing-pole.png',
+    'images/hook.png',
+    'images/net.png',
+    'images/bucket.png',
+    'images/canoe.png',
     'images/char-cat-girl.png',
     'images/char-boy.png',
     'images/char-horn-girl.png',
