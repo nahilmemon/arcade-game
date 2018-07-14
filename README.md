@@ -14,7 +14,7 @@
 
 ## Description
 
-This is a HTML5 canvas and JS implementation of the classic Frogger arcade game. Having been provided some visual assets and a game loop engine, I used object-oriented programming to create the player, enemy, and gear entities and implement the game logic.
+This is a HTML5 canvas and JS implementation of the classic Frogger arcade game. Having been provided some [visual assets and a game loop engine](https://github.com/udacity/frontend-nanodegree-arcade-game), I used object-oriented programming to create the player, enemy, and gear entities and implement the game logic.
 
 ## How to Run the Game
 
